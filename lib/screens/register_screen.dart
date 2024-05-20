@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:note_ai/main.dart';
+import 'package:note_ai/screens/first_screen.dart';
 import 'package:note_ai/screens/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -124,5 +125,5 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Firebase'i başlat
 
-  runApp(MyApp()); // Ana uygulama widget'ınız
+  runApp(MyApp(initialRoute:FirstScreen() ,)); // Ana uygulama widget'ınız
 }
