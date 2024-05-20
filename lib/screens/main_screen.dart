@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:note_ai/models/note.dart';
 import 'package:note_ai/screens/add_note_screen.dart';
 import 'package:note_ai/screens/edit_note_screen.dart';
 import 'package:note_ai/screens/first_screen.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  List<Note> notes = []; // Notlarınızı tutacak bir liste
-
+class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
           PopupMenuButton(
             onSelected: (value) {
               if (value == 'logout') {
-                _signOut();
+                _signOut(context);
               }
             },
             itemBuilder: (BuildContext context) {
@@ -45,82 +37,101 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: notes.length,
-        itemBuilder: (context, index) {
-          final note = notes[index];
-          final displayedText = _truncateText(note.content, 50); // Call truncate function
-
-          return Card(
-            margin: EdgeInsets.all(8),
-            child: InkWell(
-              onTap: () async {
-                final editedNote = await _editNote(note);
-                if (editedNote != null) {
-                  setState(() {
-                    notes[index] = editedNote;
-                  });
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      note.title,
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 4),
-                    Text(displayedText), // Use the truncated text
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+      body: _buildNotesList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final newNote = await _addNote();
-          if (newNote != null) {
-            setState(() {
-              notes.add(newNote);
-            });
-          }
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddNoteScreen()),
+          );
         },
         child: Icon(Icons.add),
       ),
     );
   }
 
-  Future<Note?> _addNote() async {
-    return await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddNoteScreen()),
+  Widget _buildNotesList() {
+    return StreamBuilder(
+      stream: _getNotesStream(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Bir hata oluştu'));
+        }
+        List<Note> notes = snapshot.data!.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          return Note(
+            id: document.id,
+            title: data['title'],
+            content: data['content'],
+          );
+        }).toList();
+
+        return ListView.builder(
+          itemCount: notes.length,
+          itemBuilder: (context, index) {
+            final note = notes[index];
+            final displayedText = _truncateText(note.content, 50);
+
+            return Card(
+              margin: EdgeInsets.all(8),
+              child: InkWell(
+                onTap: () async {
+                  final editedNote = await _editNote(context, note);
+                  if (editedNote != null) {
+                    FirebaseFirestore.instance.collection('notes').doc(note.id).update(editedNote.toMap());
+                  }
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        note.title,
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 4),
+                      Text(displayedText),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
-  Future<Note?> _editNote(Note note) async {
+  Stream<QuerySnapshot> _getNotesStream() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return FirebaseFirestore.instance.collection('notes').where('userId', isEqualTo: user.uid).snapshots();
+    }
+    return Stream.empty();
+  }
+
+  Future<Note?> _editNote(BuildContext context, Note note) async {
     return await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => EditNoteScreen(note: note)),
     );
   }
 
-  // Function to truncate text with ellipsis (...)
-  String _truncateText(String text, int limit) {
-    if (text.length <= limit) return text;
-    return text.substring(0, limit) + "...";
-  }
-
-  // Firebase Authentication ile çıkış yapma işlemi
-  Future<void> _signOut() async {
+  void _signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => FirstScreen()),
       (route) => false,
     );
+  }
+
+  String _truncateText(String text, int limit) {
+    if (text.length <= limit) return text;
+    return text.substring(0, limit) + "...";
   }
 }

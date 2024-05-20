@@ -1,66 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:note_ai/models/note.dart';
 
-class AddNoteScreen extends StatefulWidget {
-  const AddNoteScreen({super.key});
+class AddNoteScreen extends StatelessWidget {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
 
-  @override
-  State<AddNoteScreen> createState() => _AddNoteScreenState();
-}
+  void _addNote(BuildContext context) async {
+    String title = _titleController.text.trim();
+    String content = _contentController.text.trim();
 
-class _AddNoteScreenState extends State<AddNoteScreen> {
-  final titleController = TextEditingController();
-  final contentController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    titleController.text = ''; // Başlık boş olsun (isteğe bağlı)
-    contentController.text = ''; // İçerik boş olsun (isteğe bağlı)
+    if (title.isNotEmpty && content.isNotEmpty) {
+      try {
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          CollectionReference notes = FirebaseFirestore.instance.collection('notes');
+          await notes.add({
+            'title': title,
+            'content': content,
+            'userId': user.uid,
+          });
+          Navigator.pop(context);
+        }
+      } catch (e) {
+        print('Hata oluştu: $e');
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Başlık ve içerik boş olamaz')),
+      );
+    }
   }
 
-  @override
-  void dispose() {
-    titleController.dispose();
-    contentController.dispose();
-    super.dispose();
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+  }) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(labelText: labelText),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Yeni Not'),
-      ),
+      appBar: AppBar(title: Text('Yeni Not Ekle')),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: titleController,
-              decoration: InputDecoration(hintText: 'Başlık'),
+            _buildTextField(
+              controller: _titleController,
+              labelText: 'Başlık',
             ),
             SizedBox(height: 16),
-            Expanded(
-              child: TextField(
-                controller: contentController,
-                maxLines: null, // Çok satırlı metne izin verir
-                decoration: InputDecoration(
-                  hintText: 'Notunuzu buraya yazın...',
-                  border: OutlineInputBorder(),
-                ),
-                style: TextStyle(fontSize: 16),
-              ),
+            _buildTextField(
+              controller: _contentController,
+              labelText: 'İçerik',
             ),
             SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
-                final newNote = Note(
-                  title: titleController.text,
-                  content: contentController.text,
-                );
-                Navigator.pop(context, newNote); // Kaydedilen notu döndür
-              },
+              onPressed: () => _addNote(context),
               child: Text('Kaydet'),
             ),
           ],

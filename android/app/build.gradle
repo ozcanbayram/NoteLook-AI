@@ -52,6 +52,9 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+        //eklenen
+         multiDexEnabled true
     }
 
     buildTypes {
@@ -59,6 +62,11 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+
+            //eklenen
+            // minifyEnabled true
+            // shrinkResources true
+            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -67,4 +75,7 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    //eklenen
+    implementation 'com.android.support:multidex:1.0.3'
+}
