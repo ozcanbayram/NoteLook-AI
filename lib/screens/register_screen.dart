@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:note_ai/main.dart';
 import 'package:note_ai/screens/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -20,6 +23,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  Future<void> _register() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        // Firebase kaydı
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+
+        print('Kayıt başarılı');
+
+        // Başarılı kaydın ardından ana sayfaya yönlendir
+        Navigator.pushReplacement(
+          context,
+          
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+          
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Kayıt başarılı'),
+          ),);
+      } on FirebaseAuthException catch (e) {
+        print('Kayıt başarısız: ${e.code}');
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Kayıt başarısız: ${e.message}'),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Email input field
+              // E-posta ve şifre giriş alanları
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(
@@ -44,8 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
-              // Password input field
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
@@ -59,22 +95,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 30),
-              // Register button
+              const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Placeholder: Implement registration functionality here
-                    // ...
-                  }
-                },
+                onPressed: _register,
                 child: const Text('Kayıt Ol'),
               ),
-              SizedBox(height: 20),
-              // Already have an account link
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  // Navigate to login screen
+                  // Giriş ekranına yönlendir
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -88,4 +117,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+}
+
+// main fonksiyonunuzda:
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); // Firebase'i başlat
+
+  runApp(MyApp()); // Ana uygulama widget'ınız
 }

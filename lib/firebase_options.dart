@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'noteai-1.firebaseapp.com',
     storageBucket: 'noteai-1.appspot.com',
   );
+
 }
