@@ -1,12 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:note_ai/screens/main_screen.dart';
 import 'package:note_ai/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -21,10 +22,44 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  Future<void> _login() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        // Firebase giriş işlemi
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+
+        print('Giriş başarılı');
+
+        // Başarılı girişin ardından ana sayfaya yönlendir
+        Navigator.pushReplacement(
+          
+          context,
+          MaterialPageRoute(builder: (context) => MainScreen()),
+          
+        );
+        const SnackBar(
+            content: Text('Giriş başarılı'),
+          );
+        
+      } on FirebaseAuthException catch (e) {
+        print('Giriş başarısız: ${e.code}');
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Giriş başarısız: ${e.message}'),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Giriş')),
+      appBar: AppBar(title: const Text('Giriş Yap')),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
@@ -32,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Email input field
+              // E-posta ve şifre giriş alanları
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(
@@ -45,8 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
-              // Password input field
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
@@ -60,41 +94,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 30),
-              // Login button
+              const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
-                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainScreen()),
-                );
-                  if (_formKey.currentState!.validate()) {
-                    // Placeholder: Implement login functionality here
-                    // ...
-                  }
-                },
+                onPressed: _login,
                 child: const Text('Giriş Yap'),
               ),
-              SizedBox(height: 20),
-              // Forgot password link
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  // Placeholder: Implement forgot password functionality
-                  // ...
-                },
-                child: const Text('Şifreyi Unuttun mu?'),
-              ),
-              SizedBox(height: 20),
-              // Register link
-              TextButton(
-                onPressed: () {
-                  // Navigate to register screen
-                  Navigator.push(
+                  // Kayıt ekranına yönlendir
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => RegisterScreen()),
                   );
                 },
-                child: const Text('Kayıt Ol'),
+                child: const Text('Hesabınız yok mu? Kaydolun'),
               ),
             ],
           ),
