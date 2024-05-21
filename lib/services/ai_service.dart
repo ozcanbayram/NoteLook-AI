@@ -60,3 +60,30 @@ Future<String?> fixTextErrors(String input) async {
     return ("Error: $e");
   }
 }
+
+Future<String?> improveText(String input) async {
+  var message = {
+    "contents": [
+      {
+        "parts": [
+          {"text": "Bu notu daha detaylı ve gelişmiş hale getir: $input"}
+        ]
+      }
+    ]
+  };
+  try {
+    final response = await http.post(Uri.parse(baseUrl),
+        headers: header, body: jsonEncode(message));
+
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      var responseText =
+          result["candidates"][0]["content"]["parts"][0]["text"].toString();
+      return responseText;
+    } else {
+      return ("Request failed with status: ${response.statusCode}");
+    }
+  } catch (e) {
+    return ("Error: $e");
+  }
+}

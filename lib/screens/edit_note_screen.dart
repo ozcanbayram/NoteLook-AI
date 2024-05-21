@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart'; // WhatsApp ve SMS için platform kanallarını kullanmak için
 import 'package:note_ai/models/note.dart';
 import 'package:note_ai/services/ai_service.dart'; // AI servis fonksiyonunun bulunduğu dosyayı import edin
 
@@ -132,65 +134,131 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     }
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
-  }) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(labelText: labelText),
-      maxLines: null, // Birden fazla satıra izin ver
-    );
-  }
+  void _shareNote() {
+    final text = _contentController.text;
+    if (text.isNotEmpty) {
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: Icon(Icons.share, color: Colors.blue),
+                  title: Text('WhatsApp ile Paylaş'),
+                  onTap: () {
+                    _shareViaWhatsApp(text);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.share, color: Colors.blue),
+                  title: Text('SMS ile Paylaş'),
+                  onTap: () {
+                    _shareViaSMS(text);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Paylaşılacak not bulunamadı')),
+);
+}
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Notu Düzenle')),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildTextField(
-                controller: _titleController,
-                labelText: 'Başlık',
-              ),
-              SizedBox(height: 16),
-              _buildTextField(
-                controller: _contentController,
-                labelText: 'İçerik',
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _updateNote,
-                child: Text('Kaydet'),
-              ),
-              SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: _summarizeNote,
-                child: _isLoading
-                    ? CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      )
-                    : Text('Özetle'),
-              ),
-             
-              SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: _fixErrors,
-                child: Text('Onar'),
-              ),
-               SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: _deleteNote,
-                child: Text('Sil'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+Future<void> _shareViaWhatsApp(String text) async {
+try {
+final uri = 'whatsapp://send?text=$text';
+await launch(uri);
+} catch (e) {
+ScaffoldMessenger.of(context).showSnackBar(
+SnackBar(content: Text('WhatsApp açılamadı')),
+);
+}
+}
+
+Future<void> _shareViaSMS(String text) async {
+try {
+final uri = 'sms:?body=$text';
+await launch(uri);
+} catch (e) {
+ScaffoldMessenger.of(context).showSnackBar(
+SnackBar(content: Text('SMS açılamadı')),
+);
+}
+}
+
+Widget _buildTextField({
+required TextEditingController controller,
+required String labelText,
+}) {
+return TextField(
+controller: controller,
+decoration: InputDecoration(labelText: labelText),
+maxLines: null,
+);
+}
+
+@override
+Widget build(BuildContext context) {
+return Scaffold(
+appBar: AppBar(title: Text('Notu Düzenle')),
+body: SingleChildScrollView(
+child: Padding(
+padding: const EdgeInsets.all(16.0),
+child: Column(
+crossAxisAlignment: CrossAxisAlignment.stretch,
+children: [
+_buildTextField(
+controller: _titleController,
+labelText: 'Başlık',
+),
+SizedBox(height: 16),
+_buildTextField(
+controller: _contentController,
+labelText: 'İçerik',
+),
+SizedBox(height: 16),
+ElevatedButton(
+onPressed: _updateNote,
+child: Text('Kaydet'),
+),
+SizedBox(height: 8),
+ElevatedButton(
+onPressed: _summarizeNote,
+child: _isLoading
+? CircularProgressIndicator(
+valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+)
+: Text('Özetle'),
+),
+SizedBox(height: 8),
+ElevatedButton(
+onPressed: _fixErrors,
+child: Text('Hataları Onar'),
+),
+
+SizedBox(height: 8),
+ElevatedButton(
+onPressed: _shareNote,
+child: Text('Paylaş'),
+),
+SizedBox(height: 8),
+ElevatedButton(
+onPressed: _deleteNote,
+child: Text('Sil'),
+),
+],
+),
+),
+),
+);
+}
 }

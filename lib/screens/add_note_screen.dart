@@ -48,26 +48,28 @@ class AddNoteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Yeni Not Ekle')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildTextField(
-              controller: _titleController,
-              labelText: 'Başlık',
-            ),
-            SizedBox(height: 16),
-            _buildTextField(
-              controller: _contentController,
-              labelText: 'İçerik',
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => _addNote(context),
-              child: Text('Kaydet'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildTextField(
+                controller: _titleController,
+                labelText: 'Başlık',
+              ),
+              SizedBox(height: 16),
+              _buildTextField(
+                controller: _contentController,
+                labelText: 'İçerik',
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => _addNote(context),
+                child: Text('Kaydet'),
+              ),
+            ],
+          ),
         ),
       ),
     );
