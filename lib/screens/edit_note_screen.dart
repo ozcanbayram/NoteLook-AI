@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:note_ai/models/note.dart';
+import 'package:note_ai/services/ai_service.dart'; // AI servis fonksiyonunun bulunduğu dosyayı import edin
 
 class EditNoteScreen extends StatefulWidget {
   final Note note;
@@ -15,6 +16,7 @@ class EditNoteScreen extends StatefulWidget {
 class _EditNoteScreenState extends State<EditNoteScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -30,7 +32,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     super.dispose();
   }
 
-  void _updateNote() async {
+  Future<void> _updateNote() async {
     String newTitle = _titleController.text.trim();
     String newContent = _contentController.text.trim();
 
@@ -55,8 +57,29 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     }
   }
 
-  void _deleteNote() async {
-    bool confirmed = await showDialog(
+  Future<void> _summarizeNote() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String? summary = await getGeminiData(_contentController.text);
+    if (summary != null) {
+      setState(() {
+        _contentController.text = summary;
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Özetleme işlemi başarısız oldu')),
+      );
+    }
+  }
+
+  void _deleteNote() {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -64,26 +87,48 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
           content: Text('Bu notu silmek istediğinizden emin misiniz?'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text('İptal'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Hayır'),
             ),
             TextButton(
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () async {
+                try {
+                  CollectionReference notes = FirebaseFirestore.instance.collection('notes');
+                  await notes.doc(widget.note.id).delete();
+                  Navigator.pop(context);
+                  Navigator.pop(context); // Bu ekranı ve önceki ekranı kapat
+                } catch (e) {
+                  print('Hata oluştu: $e');
+                }
+              },
               child: Text('Evet'),
             ),
           ],
         );
       },
     );
+  }
 
-    if (confirmed != null && confirmed) {
-      try {
-        CollectionReference notes = FirebaseFirestore.instance.collection('notes');
-        await notes.doc(widget.note.id).delete();
-        Navigator.pop(context);
-      } catch (e) {
-        print('Hata oluştu: $e');
-      }
+  Future<void> _fixErrors() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String? fixedContent = await fixTextErrors(_contentController.text);
+    if (fixedContent != null) {
+      setState(() {
+        _contentController.text = fixedContent;
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Hataları düzeltme işlemi başarısız oldu')),
+      );
     }
   }
 
@@ -94,16 +139,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     return TextField(
       controller: controller,
       decoration: InputDecoration(labelText: labelText),
-    );
-  }
-
-  Widget _buildDeleteButton() {
-    return ElevatedButton(
-      onPressed: _deleteNote,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
-      ),
-      child: Text('Sil'),
+      maxLines: null, // Birden fazla satıra izin ver
     );
   }
 
@@ -111,28 +147,48 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Notu Düzenle')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildTextField(
-              controller: _titleController,
-              labelText: 'Başlık',
-            ),
-            SizedBox(height: 16),
-            _buildTextField(
-              controller: _contentController,
-              labelText: 'İçerik',
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _updateNote,
-              child: Text('Kaydet'),
-            ),
-            SizedBox(height: 8),
-            _buildDeleteButton(),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildTextField(
+                controller: _titleController,
+                labelText: 'Başlık',
+              ),
+              SizedBox(height: 16),
+              _buildTextField(
+                controller: _contentController,
+                labelText: 'İçerik',
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _updateNote,
+                child: Text('Kaydet'),
+              ),
+              SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: _summarizeNote,
+                child: _isLoading
+                    ? CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )
+                    : Text('Özetle'),
+              ),
+             
+              SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: _fixErrors,
+                child: Text('Onar'),
+              ),
+               SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: _deleteNote,
+                child: Text('Sil'),
+              ),
+            ],
+          ),
         ),
       ),
     );
