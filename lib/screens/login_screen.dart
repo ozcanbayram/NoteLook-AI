@@ -35,15 +35,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // Başarılı girişin ardından ana sayfaya yönlendir
         Navigator.pushReplacement(
-          
           context,
           MaterialPageRoute(builder: (context) => MainScreen()),
-          
         );
-        const SnackBar(
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
             content: Text('Giriş başarılı'),
-          );
-        
+          ),
+        );
       } on FirebaseAuthException catch (e) {
         print('Giriş başarısız: ${e.code}');
 
@@ -70,9 +70,12 @@ class _LoginScreenState extends State<LoginScreen> {
               // E-posta ve şifre giriş alanları
               TextFormField(
                 controller: _emailController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'E-posta',
+                  labelStyle: TextStyle(color: Colors.white),
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
                 ),
+                style: TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen geçerli bir e-posta girin.';
@@ -84,9 +87,12 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Şifre',
+                  labelStyle: TextStyle(color: Colors.white),
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
                 ),
+                style: TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen bir şifre girin.';

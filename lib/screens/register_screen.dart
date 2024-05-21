@@ -35,17 +35,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         print('Kayıt başarılı');
 
-        // Başarılı kaydın ardından ana sayfaya yönlendir
+        // Başarılı kaydın ardından giriş ekranına yönlendir
         Navigator.pushReplacement(
           context,
-          
           MaterialPageRoute(builder: (context) => LoginScreen()),
-          
         );
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Kayıt başarılı'),
-          ),);
+          ),
+        );
       } on FirebaseAuthException catch (e) {
         print('Kayıt başarısız: ${e.code}');
 
@@ -72,9 +72,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // E-posta ve şifre giriş alanları
               TextFormField(
                 controller: _emailController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'E-posta',
+                  labelStyle: TextStyle(color: Colors.white),
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
                 ),
+                style: TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen geçerli bir e-posta girin.';
@@ -86,9 +89,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Şifre',
+                  labelStyle: TextStyle(color: Colors.white),
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
                 ),
+                style: TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Lütfen bir şifre girin.';
@@ -125,5 +131,5 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Firebase'i başlat
 
-  runApp(MyApp(initialRoute:FirstScreen() ,)); // Ana uygulama widget'ınız
+  runApp(MyApp(initialRoute: FirstScreen())); // Ana uygulama widget'ınız
 }

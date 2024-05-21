@@ -11,29 +11,32 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text('Not Tutma Uygulaması'),
+        title: Text('NoteLook'),
         actions: [
-          PopupMenuButton(
-            onSelected: (value) {
-              if (value == 'logout') {
-                _signOut(context);
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  value: 'logout',
-                  child: Row(
-                    children: [
-                      Icon(Icons.logout),
-                      SizedBox(width: 8),
-                      Text('Çıkış Yap'),
-                    ],
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            child: PopupMenuButton(
+              icon: Icon(Icons.more_vert, color: Colors.white), // Menü simgesi rengi
+              onSelected: (value) {
+                if (value == 'logout') {
+                  _signOut(context);
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem(
+                    value: 'logout',
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout, color: Colors.white), // Menü öğesi ikon rengi
+                        SizedBox(width: 8),
+                        Text('Çıkış Yap', style: TextStyle(color: Colors.white)), // Menü öğesi metin rengi
+                      ],
+                    ),
                   ),
-                ),
-              ];
-            },
+                ];
+              },
+            ),
           ),
         ],
       ),
@@ -76,6 +79,7 @@ class MainScreen extends StatelessWidget {
             final displayedText = _truncateText(note.content, 50);
 
             return Card(
+              color: const Color.fromARGB(255, 18, 18, 18), // Kart arka plan rengi
               margin: EdgeInsets.all(8),
               child: InkWell(
                 onTap: () async {

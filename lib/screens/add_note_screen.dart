@@ -39,7 +39,12 @@ class AddNoteScreen extends StatelessWidget {
   }) {
     return TextField(
       controller: controller,
-      decoration: InputDecoration(labelText: labelText),
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: TextStyle(color: Colors.white),
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+      ),
+      style: TextStyle(color: Colors.white),
       maxLines: null,
     );
   }
