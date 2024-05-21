@@ -3,7 +3,7 @@ import 'package:note_ai/screens/login_screen.dart';
 import 'package:note_ai/screens/register_screen.dart';
 
 class FirstScreen extends StatefulWidget {
-  const FirstScreen({super.key});
+  const FirstScreen({Key? key}) : super(key: key);
 
   @override
   State<FirstScreen> createState() => _FirstScreenState();
@@ -14,12 +14,19 @@ class _FirstScreenState extends State<FirstScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Giriş/Kayıt'),
+        title: const Text('NoteLook'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'Yapay zeka ile notlarınızı geliştirin.',
+              style: TextStyle(fontSize: 18, color: Colors.lightBlueAccent),
+            ),
+            SizedBox(height: 10,),
+             Text('NoteLook & AI',style: TextStyle(fontSize: 18, color: Colors.lightGreen),),
+            SizedBox(height: 100),
             ElevatedButton(
               onPressed: () {
                 // Navigate to login screen
@@ -41,6 +48,9 @@ class _FirstScreenState extends State<FirstScreen> {
               },
               child: const Text('Kayıt Ol'),
             ),
+            SizedBox(height: 20),
+            
+           
           ],
         ),
       ),

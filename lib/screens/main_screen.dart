@@ -16,7 +16,7 @@ class MainScreen extends StatelessWidget {
           Container(
             margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             child: PopupMenuButton(
-              icon: Icon(Icons.more_vert, color: Colors.white), // Menü simgesi rengi
+              icon: Icon(Icons.more_vert, color: Colors.white),
               onSelected: (value) {
                 if (value == 'logout') {
                   _signOut(context);
@@ -28,9 +28,9 @@ class MainScreen extends StatelessWidget {
                     value: 'logout',
                     child: Row(
                       children: [
-                        Icon(Icons.logout, color: Colors.white), // Menü öğesi ikon rengi
+                        Icon(Icons.logout, color: Colors.white),
                         SizedBox(width: 8),
-                        Text('Çıkış Yap', style: TextStyle(color: Colors.white)), // Menü öğesi metin rengi
+                        Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
                       ],
                     ),
                   ),
@@ -39,6 +39,7 @@ class MainScreen extends StatelessWidget {
             ),
           ),
         ],
+        leading: Container(), // Sol üst köşedeki geri butonunu kaldırır
       ),
       body: _buildNotesList(),
       floatingActionButton: FloatingActionButton(

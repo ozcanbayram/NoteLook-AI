@@ -239,7 +239,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Notu Düzenle')),
+      appBar: AppBar(title: Text('Not Detayları')),
       body: Stack(
         children: [
           SingleChildScrollView(
