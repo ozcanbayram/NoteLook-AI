@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:note_ai/models/note.dart';
 import 'package:note_ai/services/ai_service.dart';
 import 'package:url_launcher/url_launcher.dart'; 
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class EditNoteScreen extends StatefulWidget {
   final Note note;
@@ -250,7 +251,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                   controller: _titleController,
                   labelText: 'Başlık',
                 ),
-                SizedBox(height: 16                ),
+                SizedBox(height: 16),
                 _buildTextField(
                   controller: _contentController,
                   labelText: 'İçerik',
@@ -333,7 +334,10 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
             Container(
               color: Colors.black.withOpacity(0.5),
               child: Center(
-                child: CircularProgressIndicator(),
+                child: SpinKitRipple(
+                  color: Colors.white,
+                  size: 50.0,
+                ),
               ),
             ),
         ],
