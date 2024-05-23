@@ -2,10 +2,20 @@
 
 Bu Flutter mobil uygulaması yapay zeka destekli bir not tutma uygulamasıdır. 
 
-Bu uygulamada Bilginin gücü konsepti temel alınmıştır. 
+Bu uygulamada Bilginin Gücü konsepti temel alınmıştır. 
 Yapay zekadan destek alarak Bilgiyi daha güçlü kılmak ve hepimizin gündelik yaşantımızda aldığımız bilgi dolu notları daha efektif kılmak amaçlanmıştır.
-
 Yapay zeka desteği için Google Gemini API kullanılmıştır.
+
+# Uygulamanın Özellikleri ve Kullanımı
+⚡ Uygulamaya kolayca kayıt olunup giriş yapılabilir.
+⚡ Yeni notlar oluşturularak kaydedilebilir.
+✨ Yapay zeka ile uzun ve karmaşık notlar 'Özetle' butonu ile özetlenebilir.
+✨ Yapay zeka ile not içerisindeki hatalı yazımlar ve bilgiler 'Hataları Onar'tek tuş ile düzeltilebilir. Hatalar düzeltilir ve yapay zeka tarafından bize gösterilir.
+✨ Yapay zeka ile sadece 'Notumu Geliştir' butonuna tıklanarak not hakkında çok daha fazla detaylı bilgiye anında ulaşılabilir.
+💫 Tutulan notlar Whatsapp ve SMS yolları ile başkalarıyla paylaşılabilir. 
+
+👀 NoteLook sayesinde notlarımızı çok daha kolay yönetebilir. Bilgilere çok daha verimli bir şekilde ulaşarak bilginin gücünü olabildiğince efektif kullanarak gelişim serüvenlerimizde ilerleyebiliriz.
+
 
 # Kullanılan Diller ve Araçlar
 ![Langs](https://skillicons.dev/icons?i=flutter,dart,firebase,vscode,git,github,figma,pr,") 
