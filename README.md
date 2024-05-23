@@ -20,15 +20,21 @@ Yapay zeka desteği için Google Gemini API kullanılmıştır.
 
 ✨ Yapay zeka ile uzun ve karmaşık notlar 'Özetle' butonu ile özetlenebilir.
 
-✨ Yapay zeka ile not içerisindeki hatalı yazımlar ve bilgiler 'Hataları Onar'tek tuş ile düzeltilebilir. Hatalar düzeltilir ve yapay zeka tarafından bize gösterilir.
+✨ Yapay zeka ile not içerisindeki hatalı yazımlar ve bilgiler 'Hataları Onar' tuşu ile anında düzeltilebilir. Hatalar düzeltilir ve yapay zeka tarafından bize gösterilir.
 
 ✨ Yapay zeka ile sadece 'Notumu Geliştir' butonuna tıklanarak not hakkında çok daha fazla detaylı bilgiye anında ulaşılabilir.
 
 💫 Tutulan notlar Whatsapp ve SMS yolları ile başkalarıyla paylaşılabilir. 
 
 
+<hr>
 
-👀 NoteLook sayesinde notlarımızı çok daha kolay yönetebilir. Bilgilere çok daha verimli bir şekilde ulaşarak bilginin gücünü olabildiğince efektif kullanarak gelişim serüvenlerimizde ilerleyebiliriz.
+
+👀 NoteLook sayesinde notlarımızı çok daha kolay yönetebiliriz. 
+
+👀 Bilgilere çok daha verimli bir şekilde ulaşabiliriz. 
+
+👀 Bilginin gücünü olabildiğince efektif kullanarak gelişim serüvenlerimizde ilerleyebiliriz.
 
 
 # Kullanılan Diller ve Araçlar
