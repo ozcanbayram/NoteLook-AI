@@ -8,8 +8,9 @@ Yapay zekadan destek alarak Bilgiyi daha güçlü kılmak ve hepimizin gündelik
 Yapay zeka desteği için Google Gemini API kullanılmıştır.
 
 # Kullanılan Diller ve Araçlar
-![Langs](https://skillicons.dev/icons?i=flutter,dart,firebase,vscode,git,github") 
+![Langs](https://skillicons.dev/icons?i=flutter,dart,firebase,vscode,git,github,figma,pr,") 
 
+# Youtube Tanıtım Videosunu İzlemek İçin <a href="https://youtu.be/B8NZFk5Abhg"> Tıkla </a>
 
 
 
