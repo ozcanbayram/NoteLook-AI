@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:note_ai/main.dart';
-import 'package:note_ai/screens/first_screen.dart';
+import 'package:note_ai/product/custom_widgets.dart';
+import 'package:note_ai/product/project_texts.dart';
 import 'package:note_ai/screens/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -33,25 +32,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
           password: _passwordController.text,
         );
 
-        print('Kayıt başarılı');
-
         // Başarılı kaydın ardından giriş ekranına yönlendir
         Navigator.pushReplacement(
+          // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
 
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Kayıt başarılı'),
+          SnackBar(
+            content: Text(ProjectTexts().successRegister),
           ),
         );
       } on FirebaseAuthException catch (e) {
-        print('Kayıt başarısız: ${e.code}');
+        // ignore: avoid_print
+        print('${ProjectTexts().failRegister}: ${e.code}');
 
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Kayıt başarısız: ${e.message}'),
+            content: Text('${ProjectTexts().failRegister}: ${e.message}'),
           ),
         );
       }
@@ -61,7 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Kayıt Ol')),
+      appBar: AppBar(title: Text(ProjectTexts().registerButton)),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
@@ -69,54 +70,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // E-posta ve şifre giriş alanları
-              TextFormField(
+              CustomTextField(
                 controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'E-posta',
-                  labelStyle: TextStyle(color: Colors.white),
-                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                ),
-                style: TextStyle(color: Colors.white),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Lütfen geçerli bir e-posta girin.';
-                  }
-                  return null;
-                },
+                labeltext: ProjectTexts().emailLabelText,
+                errorMessage: ProjectTexts().emailErrorMessage,
+                fieldType: false,
               ),
-              const SizedBox(height: 20),
-              TextFormField(
+              const CustomSizedBox(),
+              CustomTextField(
                 controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Şifre',
-                  labelStyle: TextStyle(color: Colors.white),
-                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                ),
-                style: TextStyle(color: Colors.white),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Lütfen bir şifre girin.';
-                  }
-                  return null;
-                },
+                labeltext: ProjectTexts().passwordLabelText,
+                errorMessage: ProjectTexts().passwordErrorMessage,
+                fieldType: true,
               ),
-              const SizedBox(height: 30),
+              const CustomSizedBox(),
               ElevatedButton(
                 onPressed: _register,
-                child: const Text('Kayıt Ol'),
+                child: Text(ProjectTexts().registerButton),
               ),
               const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  // Giriş ekranına yönlendir
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
-                },
-                child: const Text('Zaten hesabınız var mı?'),
+              CustomTextButton(
+                targetText: const LoginScreen(),
+                title: ProjectTexts().registerTextButton,
               ),
             ],
           ),
@@ -124,12 +99,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
-}
-
-// main fonksiyonunuzda:
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Firebase'i başlat
-
-  runApp(MyApp(initialRoute: FirstScreen())); // Ana uygulama widget'ınız
 }
