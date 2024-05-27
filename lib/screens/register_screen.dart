@@ -88,7 +88,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 onPressed: _register,
                 child: Text(ProjectTexts().registerButton),
               ),
-              const SizedBox(height: 20),
+              const CustomSizedBox(),
               CustomTextButton(
                 targetText: const LoginScreen(),
                 title: ProjectTexts().registerTextButton,

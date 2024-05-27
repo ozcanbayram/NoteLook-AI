@@ -2,21 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:note_ai/models/note.dart';
+import 'package:note_ai/product/custom_widgets.dart';
+import 'package:note_ai/product/project_colors.dart';
+import 'package:note_ai/product/project_texts.dart';
 import 'package:note_ai/screens/add_note_screen.dart';
 import 'package:note_ai/screens/edit_note_screen.dart';
 import 'package:note_ai/screens/first_screen.dart';
 
+// ignore: use_key_in_widget_constructors
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('NoteLook'),
+        title: Text(ProjectTexts().projectName),
         actions: [
           Container(
-            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             child: PopupMenuButton(
-              icon: Icon(Icons.more_vert, color: Colors.white),
+              icon:
+                  const Icon(Icons.more_vert, color: ProjectColors.whiteColor),
               onSelected: (value) {
                 if (value == 'logout') {
                   _signOut(context);
@@ -28,9 +33,12 @@ class MainScreen extends StatelessWidget {
                     value: 'logout',
                     child: Row(
                       children: [
-                        Icon(Icons.logout, color: Colors.white),
-                        SizedBox(width: 8),
-                        Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
+                        const Icon(Icons.logout,
+                            color: ProjectColors.whiteColor),
+                        const CustomSizedBox(boxSize: 8),
+                        Text(ProjectTexts().logOut,
+                            style: const TextStyle(
+                                color: ProjectColors.whiteColor)),
                       ],
                     ),
                   ),
@@ -49,7 +57,7 @@ class MainScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => AddNoteScreen()),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -59,10 +67,10 @@ class MainScreen extends StatelessWidget {
       stream: _getNotesStream(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Center(child: Text('Bir hata oluştu'));
+          return Center(child: Text(ProjectTexts().anyErrorMessage));
         }
         List<Note> notes = snapshot.data!.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
@@ -80,25 +88,29 @@ class MainScreen extends StatelessWidget {
             final displayedText = _truncateText(note.content, 50);
 
             return Card(
-              color: const Color.fromARGB(255, 18, 18, 18), // Kart arka plan rengi
-              margin: EdgeInsets.all(8),
+              color: ProjectColors.cardColor,
+              margin: const EdgeInsets.all(8),
               child: InkWell(
                 onTap: () async {
                   final editedNote = await _editNote(context, note);
                   if (editedNote != null) {
-                    FirebaseFirestore.instance.collection('notes').doc(note.id).update(editedNote.toMap());
+                    FirebaseFirestore.instance
+                        .collection('notes')
+                        .doc(note.id)
+                        .update(editedNote.toMap());
                   }
                 },
                 child: Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         note.title,
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 4),
+                      const CustomSizedBox(boxSize: 8),
                       Text(displayedText),
                     ],
                   ),
@@ -114,9 +126,12 @@ class MainScreen extends StatelessWidget {
   Stream<QuerySnapshot> _getNotesStream() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      return FirebaseFirestore.instance.collection('notes').where('userId', isEqualTo: user.uid).snapshots();
+      return FirebaseFirestore.instance
+          .collection('notes')
+          .where('userId', isEqualTo: user.uid)
+          .snapshots();
     }
-    return Stream.empty();
+    return const Stream.empty();
   }
 
   Future<Note?> _editNote(BuildContext context, Note note) async {
@@ -129,14 +144,16 @@ class MainScreen extends StatelessWidget {
   void _signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(
+      // ignore: use_build_context_synchronously
       context,
-      MaterialPageRoute(builder: (context) => FirstScreen()),
+      MaterialPageRoute(builder: (context) => const FirstScreen()),
       (route) => false,
     );
   }
 
   String _truncateText(String text, int limit) {
     if (text.length <= limit) return text;
+    // ignore: prefer_interpolation_to_compose_strings
     return text.substring(0, limit) + "...";
   }
 }

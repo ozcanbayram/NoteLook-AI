@@ -14,4 +14,6 @@ class ProjectTexts {
   final String registerTextButton = 'Zaten hesabınız var mı? Giriş yapın.';
   final String failRegister = 'Kayıt başarısız';
   final String successRegister = 'Kayıt başarılı';
+  final String logOut = 'Çıkış yap';
+  final String anyErrorMessage = 'Bir hata oluştu';
 }
