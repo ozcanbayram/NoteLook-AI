@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:note_ai/product/project_colors.dart';
 import 'package:note_ai/product/custom_widgets.dart';
 import 'package:note_ai/product/project_texts.dart';
 import 'package:note_ai/screens/login_screen.dart';
@@ -22,44 +23,23 @@ class _FirstScreenState extends State<FirstScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //WELCOME TEXT & SPECIAL STYLES
-            Text(
-              ProjectTexts().welcomeText,
-              style: const TextStyle(
-                fontSize: 18,
-                color: Colors.lightBlueAccent,
-              ),
-            ),
+            //TEXTS
+            FirstScreenTexts(
+                title: ProjectTexts().welcomeText,
+                textColor: ProjectColors.secondColor),
             const CustomSizedBox(boxSize: 8),
-            Text(
-              ProjectTexts().welcomeProjectName,
-              style: const TextStyle(
-                fontSize: 18,
-                color: Colors.lightGreen,
-              ),
-            ),
+            FirstScreenTexts(
+                title: ProjectTexts().welcomeProjectName,
+                textColor: ProjectColors.firstColor),
             const CustomSizedBox(boxSize: 100),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to login screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );
-              },
-              child: Text(ProjectTexts().loginButton),
-            ),
+            //BUTTONS
+            NavigatorButton(
+                targetScreen: const LoginScreen(),
+                buttonText: ProjectTexts().loginButton),
             const CustomSizedBox(),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to register screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RegisterScreen()),
-                );
-              },
-              child: Text(ProjectTexts().registerButton),
-            ),
+            NavigatorButton(
+                targetScreen: const RegisterScreen(),
+                buttonText: ProjectTexts().registerButton),
             const CustomSizedBox(),
           ],
         ),
