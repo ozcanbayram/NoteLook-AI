@@ -71,6 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomTextField(
+                lineLimit: 1,
                 controller: _emailController,
                 labeltext: ProjectTexts().emailLabelText,
                 errorMessage: ProjectTexts().emailErrorMessage,
@@ -78,6 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const CustomSizedBox(),
               CustomTextField(
+                lineLimit: 1,
                 controller: _passwordController,
                 labeltext: ProjectTexts().passwordLabelText,
                 errorMessage: ProjectTexts().passwordErrorMessage,

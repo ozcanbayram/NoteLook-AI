@@ -42,7 +42,7 @@ class AddNoteScreen extends StatelessWidget {
     required TextEditingController controller,
     required String labelText,
   }) {
-    return CustomTextField(
+    return CustomTextField(lineLimit: null,
       controller: controller,
       labeltext: labelText,
       errorMessage: ProjectTexts().inputTitle,

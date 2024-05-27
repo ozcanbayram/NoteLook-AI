@@ -70,18 +70,19 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.labeltext,
     required this.errorMessage,
-    required this.fieldType,
+    required this.fieldType, required this.lineLimit,
   });
 
   final TextEditingController controller;
   final String labeltext;
   final String errorMessage;
   final bool fieldType;
+  final int? lineLimit;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      maxLines: null,
+      maxLines: lineLimit,
       controller: controller,
       obscureText: fieldType,
       decoration: InputDecoration(

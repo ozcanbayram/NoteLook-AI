@@ -20,6 +20,26 @@ class ProjectTexts {
   final String inputTitle = 'Başlık giriniz';
   final String addNoteTitle = 'Yeni Not';
   final String addNoteInputTitle = 'Başlık';
-  final String addNoteInputNote = 'Başlık';
+  final String addNoteInputNote = 'İçerik';
   final String save = 'Kaydet';
+  final String summarize = 'Özetle';
+  final String noteDetailsTitle = 'Not Detayları';
+  final String summarizingError = 'Özetleme işlemi başarısız oldu.';
+  final String developeNoteError = 'Notu geliştirme işlemi başarısız oldu.';
+  final String editNoteError = 'Hataları düzeltme işlemi başarısız oldu';
+  final String deleteNote = 'Notu Sil';
+  final String deleteNoteAlert = 'Bu notu silmek istediğinizden emin misiniz?';
+  final String no = 'Hayır';
+  final String yes = 'Evet';
+  final String shareWithWp = 'Whatsapp ile paylaş';
+  final String shareWithSMS = 'SMS ile paylaş';
+  final String noteCantNotFound = 'Paylaşılacak not bulunamadı.';
+  final String whatsappError = 'Whatsapp açılmadı.';
+  final String smsError = 'SMS açılmadı.';
+  final String fixErrors = 'Hataları Onar';
+  final String developrNote = 'Notumu Geliştir';
+  final String share = 'Paylaş';
+  final String delete = 'Sil';
+  final String developedNotes = 'Geliştirilmiş Not';
+  final String close = 'Kapat';
 }

@@ -74,14 +74,14 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // E-posta ve şifre giriş alanları
-              CustomTextField(
+              CustomTextField(lineLimit: 1,
                 fieldType: false,
                 controller: _emailController,
                 labeltext: ProjectTexts().emailLabelText,
                 errorMessage: ProjectTexts().emailErrorMessage,
               ),
               const CustomSizedBox(),
-              CustomTextField(
+              CustomTextField(lineLimit: 1,
                 fieldType: true,
                 controller: _passwordController,
                 labeltext: ProjectTexts().passwordLabelText,

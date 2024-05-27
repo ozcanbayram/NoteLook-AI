@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:note_ai/models/note.dart';
+import 'package:note_ai/product/custom_widgets.dart';
+import 'package:note_ai/product/project_colors.dart';
+import 'package:note_ai/product/project_texts.dart';
 import 'package:note_ai/services/ai_service.dart';
-import 'package:url_launcher/url_launcher.dart'; 
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class EditNoteScreen extends StatefulWidget {
   final Note note;
 
+  // ignore: use_key_in_widget_constructors
   const EditNoteScreen({required this.note});
 
   @override
@@ -44,19 +48,22 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       try {
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
-          CollectionReference notes = FirebaseFirestore.instance.collection('notes');
+          CollectionReference notes =
+              FirebaseFirestore.instance.collection('notes');
           await notes.doc(widget.note.id).update({
             'title': newTitle,
             'content': newContent,
           });
+          // ignore: use_build_context_synchronously
           Navigator.pop(context);
         }
       } catch (e) {
-        print('Hata oluştu: $e');
+        // ignore: avoid_print
+        print('Hata oluştu: $e'); //Hatayı görmek için
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Başlık ve içerik boş olamaz')),
+        SnackBar(content: Text(ProjectTexts().alertAddNote)),
       );
     }
   }
@@ -76,8 +83,9 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       setState(() {
         _isLoading = false;
       });
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Özetleme işlemi başarısız oldu')),
+        SnackBar(content: Text(ProjectTexts().summarizingError)),
       );
     }
   }
@@ -99,8 +107,9 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
         _isLoading = false;
         _isImprovedVisible = false;
       });
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Notu geliştirme işlemi başarısız oldu')),
+        SnackBar(content: Text(ProjectTexts().developeNoteError)),
       );
     }
   }
@@ -110,27 +119,31 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Notu Sil'),
-          content: Text('Bu notu silmek istediğinizden emin misiniz?'),
+          title: Text(ProjectTexts().deleteNote),
+          content: Text(ProjectTexts().deleteNoteAlert),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Hayır'),
+              child: Text(ProjectTexts().no),
             ),
             TextButton(
               onPressed: () async {
                 try {
-                  CollectionReference notes = FirebaseFirestore.instance.collection('notes');
+                  CollectionReference notes =
+                      FirebaseFirestore.instance.collection('notes');
                   await notes.doc(widget.note.id).delete();
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
-                  Navigator.pop(context); 
+                  // ignore: use_build_context_synchronously
+                  Navigator.pop(context);
                 } catch (e) {
+                  // ignore: avoid_print
                   print('Hata oluştu: $e');
                 }
               },
-              child: Text('Evet'),
+              child: Text(ProjectTexts().yes),
             ),
           ],
         );
@@ -153,8 +166,9 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       setState(() {
         _isLoading = false;
       });
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Hataları düzeltme işlemi başarısız oldu')),
+        SnackBar(content: Text(ProjectTexts().editNoteError)),
       );
     }
   }
@@ -166,21 +180,23 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
         context: context,
         builder: (BuildContext context) {
           return Container(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  leading: Icon(Icons.share, color: Colors.blue),
-                  title: Text('WhatsApp ile Paylaş'),
+                  leading:
+                      const Icon(Icons.share, color: ProjectColors.secondColor),
+                  title: Text(ProjectTexts().shareWithWp),
                   onTap: () {
                     _shareViaWhatsApp(text);
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.share, color: Colors.blue),
-                  title: Text('SMS ile Paylaş'),
+                  leading:
+                      const Icon(Icons.share, color: ProjectColors.secondColor),
+                  title: Text(ProjectTexts().shareWithSMS),
                   onTap: () {
                     _shareViaSMS(text);
                     Navigator.pop(context);
@@ -193,7 +209,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Paylaşılacak not bulunamadı')),
+        SnackBar(content: Text(ProjectTexts().noteCantNotFound)),
       );
     }
   }
@@ -201,10 +217,12 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   Future<void> _shareViaWhatsApp(String text) async {
     try {
       final uri = 'whatsapp://send?text=$text';
+      // ignore: deprecated_member_use
       await launch(uri);
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('WhatsApp açılamadı')),
+        SnackBar(content: Text(ProjectTexts().whatsappError)),
       );
     }
   }
@@ -212,10 +230,12 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   Future<void> _shareViaSMS(String text) async {
     try {
       final uri = 'sms:?body=$text';
+      // ignore: deprecated_member_use
       await launch(uri);
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('SMS açılamadı')),
+        SnackBar(content: Text(ProjectTexts().smsError)),
       );
     }
   }
@@ -228,18 +248,18 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       controller: controller,
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(color: Colors.white),
+        labelStyle: const TextStyle(color: ProjectColors.whiteColor),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
       ),
-      style: TextStyle(color: Colors.white),
-      maxLines: null, 
+      style: const TextStyle(color: ProjectColors.whiteColor),
+      maxLines: null,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Not Detayları')),
+      appBar: AppBar(title: Text(ProjectTexts().noteDetailsTitle)),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -249,69 +269,69 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
               children: [
                 _buildTextField(
                   controller: _titleController,
-                  labelText: 'Başlık',
+                  labelText: ProjectTexts().addNoteInputTitle,
                 ),
-                SizedBox(height: 16),
+                const CustomSizedBox(),
                 _buildTextField(
                   controller: _contentController,
-                  labelText: 'İçerik',
+                  labelText: ProjectTexts().addNoteInputNote,
                 ),
-                SizedBox(height: 16),
+                const CustomSizedBox(),
                 ElevatedButton(
                   onPressed: _updateNote,
-                  child: Text('Kaydet'),
+                  child: Text(ProjectTexts().save),
                 ),
-                SizedBox(height: 8),
+                const CustomSizedBox(),
                 ElevatedButton(
                   onPressed: _summarizeNote,
-                  child: Text('Özetle'),
+                  child: Text(ProjectTexts().summarize),
                 ),
-                SizedBox(height: 8),
+                const CustomSizedBox(),
                 ElevatedButton(
                   onPressed: _fixErrors,
-                  child: Text('Hataları Onar'),
+                  child: Text(ProjectTexts().fixErrors),
                 ),
-                SizedBox(height: 8),
+                const CustomSizedBox(),
                 ElevatedButton(
                   onPressed: _improveNote,
-                  child: Text('Notumu Geliştir'),
+                  child: Text(ProjectTexts().developrNote),
                 ),
-                SizedBox(height: 8),
+                const CustomSizedBox(),
                 ElevatedButton(
                   onPressed: _shareNote,
-                  child: Text('Paylaş'),
+                  child: Text(ProjectTexts().share),
                 ),
-                SizedBox(height: 8),
+                const CustomSizedBox(),
                 ElevatedButton(
                   onPressed: _deleteNote,
-                  child: Text('Sil'),
+                  child: Text(ProjectTexts().delete),
                 ),
-                SizedBox(height: 16),
+                const CustomSizedBox(),
                 _isImprovedVisible
                     ? Container(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 18, 18, 18),
+                          color: ProjectColors.cardColor,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
-                              'Geliştirilmiş Not:',
-                              style: TextStyle(
+                              ProjectTexts().developedNotes,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.lightGreen,
+                                color: ProjectColors.firstColor,
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const CustomSizedBox(),
                             SelectableText(
                               _improvedContent,
-                              style: TextStyle(
-                                color: Colors.white,
+                              style: const TextStyle(
+                                color: ProjectColors.whiteColor,
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const CustomSizedBox(),
                             TextButton(
                               onPressed: () {
                                 setState(() {
@@ -319,8 +339,9 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                                 });
                               },
                               child: Text(
-                                'Kapat',
-                                style: TextStyle(color: Colors.blue),
+                                ProjectTexts().close,
+                                style: const TextStyle(
+                                    color: ProjectColors.secondColor),
                               ),
                             ),
                           ],
@@ -333,10 +354,10 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
           if (_isLoading)
             Container(
               color: Colors.black.withOpacity(0.5),
-              child: Center(
+              child: const Center(
                 child: SpinKitRipple(
-                  color: Colors.white,
-                  size: 50.0,
+                  color: ProjectColors.secondColor,
+                  size: 200.0,
                 ),
               ),
             ),
@@ -345,4 +366,3 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     );
   }
 }
-
