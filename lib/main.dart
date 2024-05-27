@@ -15,7 +15,7 @@ void main() async {
 
   // Kullanıcının oturum durumunu kontrol et
   final currentUser = FirebaseAuth.instance.currentUser;
-  Widget initialRoute = (currentUser != null) ? MainScreen() : FirstScreen();
+  Widget initialRoute = (currentUser != null) ? MainScreen() : const FirstScreen();
 
   runApp(MyApp(initialRoute: initialRoute));
 }
@@ -23,7 +23,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final Widget initialRoute;
 
-  const MyApp({required this.initialRoute, Key? key}) : super(key: key);
+  const MyApp({required this.initialRoute, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           primary: Colors.white,
           secondary: Colors.amber,
         ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: Colors.black,
           foregroundColor: Colors.lightGreenAccent,
           centerTitle: true,
@@ -48,16 +48,16 @@ class MyApp extends StatelessWidget {
           ),
         ),
         cardColor: Colors.grey[900],
-        cardTheme: CardTheme(
+        cardTheme: const CardTheme(
           shadowColor: Colors.transparent,
           elevation: 0,
         ),
-        textTheme: TextTheme(
-          bodyText1: TextStyle(color: Colors.white),
-          bodyText2: TextStyle(color: Colors.white),
+        textTheme:  const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
         ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: const Color.fromARGB(255, 18, 18, 18),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color.fromARGB(255, 18, 18, 18),
           foregroundColor: Colors.lightGreen,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -74,16 +74,16 @@ class MyApp extends StatelessWidget {
               }
               return Colors.lightGreen;
             }),
-            textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)),
+            textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            minimumSize: MaterialStateProperty.all<Size>(const Size(double.infinity, 50)),
             shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
           ),
         ),
-        popupMenuTheme: PopupMenuThemeData(
-          color: const Color.fromARGB(255, 18, 18, 18),
+        popupMenuTheme: const PopupMenuThemeData(
+          color: Color.fromARGB(255, 18, 18, 18),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
-        dialogTheme: DialogTheme(
+        iconTheme: const IconThemeData(color: Colors.white),
+        dialogTheme: const DialogTheme(
           backgroundColor: Colors.black,
           titleTextStyle: TextStyle(color: Colors.lightGreenAccent, fontSize: 20, fontWeight: FontWeight.bold),
           contentTextStyle: TextStyle(color: Colors.lightGreenAccent),
@@ -92,7 +92,7 @@ class MyApp extends StatelessWidget {
           style: TextButton.styleFrom(
             foregroundColor: Colors.white,
             backgroundColor: Colors.transparent,
-            textStyle: TextStyle(fontWeight: FontWeight.bold),
+            textStyle: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,
           ),
-          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           hintStyle: TextStyle(color: Colors.grey[400], fontWeight: FontWeight.bold),
         ),
       ),
