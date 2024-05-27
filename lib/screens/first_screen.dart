@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:note_ai/product/custom_widgets.dart';
 import 'package:note_ai/product/project_texts.dart';
 import 'package:note_ai/screens/login_screen.dart';
 import 'package:note_ai/screens/register_screen.dart';
 
 class FirstScreen extends StatefulWidget {
-  const FirstScreen({Key? key}) : super(key: key);
+  const FirstScreen({super.key});
 
   @override
   State<FirstScreen> createState() => _FirstScreenState();
@@ -21,37 +22,45 @@ class _FirstScreenState extends State<FirstScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            //WELCOME TEXT & SPECIAL STYLES
             Text(
-              'Yapay zeka ile notlarınızı geliştirin.',
-              style: TextStyle(fontSize: 18, color: Colors.lightBlueAccent),
+              ProjectTexts().welcomeText,
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.lightBlueAccent,
+              ),
             ),
-            SizedBox(height: 10,),
-             Text('NoteLook & AI',style: TextStyle(fontSize: 18, color: Colors.lightGreen),),
-            SizedBox(height: 100),
+            const CustomSizedBox(boxSize: 8),
+            Text(
+              ProjectTexts().welcomeProjectName,
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.lightGreen,
+              ),
+            ),
+            const CustomSizedBox(boxSize: 100),
             ElevatedButton(
               onPressed: () {
                 // Navigate to login screen
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
               },
-              child: const Text('Giriş Yap'),
+              child: Text(ProjectTexts().loginButton),
             ),
-            SizedBox(height: 20),
+            const CustomSizedBox(),
             ElevatedButton(
               onPressed: () {
                 // Navigate to register screen
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                  MaterialPageRoute(builder: (context) => const RegisterScreen()),
                 );
               },
-              child: const Text('Kayıt Ol'),
+              child: Text(ProjectTexts().registerButton),
             ),
-            SizedBox(height: 20),
-            
-           
+            const CustomSizedBox(),
           ],
         ),
       ),
