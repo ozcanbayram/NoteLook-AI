@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:note_ai/product/custom_widgets.dart';
+import 'package:note_ai/product/project_texts.dart';
 import 'package:note_ai/screens/main_screen.dart';
 import 'package:note_ai/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
@@ -22,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  //FIREBASE
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -30,27 +34,29 @@ class _LoginScreenState extends State<LoginScreen> {
           email: _emailController.text,
           password: _passwordController.text,
         );
-
-        print('Giriş başarılı');
-
         // Başarılı girişin ardından ana sayfaya yönlendir
         Navigator.pushReplacement(
+          // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(builder: (context) => MainScreen()),
-        );
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Giriş başarılı'),
+          MaterialPageRoute(
+            builder: (context) => MainScreen(),
           ),
+        );
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(ProjectTexts().successLogin)),
         );
       } on FirebaseAuthException catch (e) {
-        print('Giriş başarısız: ${e.code}');
+        // ignore: avoid_print
+        print('${ProjectTexts().failLogin}: ${e.message}'); // for any error
 
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Giriş başarısız: ${e.message}'),
-          ),
+            content: Text(
+              '${ProjectTexts().failLogin}: ${e.message}',
+            ),
+          ), // for any error
         );
       }
     }
@@ -59,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Giriş Yap')),
+      appBar: AppBar(title: Text(ProjectTexts().loginButton)),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
@@ -68,54 +74,29 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // E-posta ve şifre giriş alanları
-              TextFormField(
+              CustomTextField(
+                fieldType: false,
                 controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'E-posta',
-                  labelStyle: TextStyle(color: Colors.white),
-                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                ),
-                style: TextStyle(color: Colors.white),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Lütfen geçerli bir e-posta girin.';
-                  }
-                  return null;
-                },
+                labeltext: ProjectTexts().emailLabelText,
+                errorMessage: ProjectTexts().emailErrorMessage,
               ),
-              const SizedBox(height: 20),
-              TextFormField(
+              const CustomSizedBox(),
+              CustomTextField(
+                fieldType: true,
                 controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Şifre',
-                  labelStyle: TextStyle(color: Colors.white),
-                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                ),
-                style: TextStyle(color: Colors.white),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Lütfen bir şifre girin.';
-                  }
-                  return null;
-                },
+                labeltext: ProjectTexts().passwordLabelText,
+                errorMessage: ProjectTexts().passwordErrorMessage,
               ),
-              const SizedBox(height: 30),
+              const CustomSizedBox(),
               ElevatedButton(
-                onPressed: _login,
-                child: const Text('Giriş Yap'),
+                onPressed: (_login),
+                child: Text(ProjectTexts().loginButton),
               ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  // Kayıt ekranına yönlendir
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterScreen()),
-                  );
-                },
-                child: const Text('Hesabınız yok mu? Kaydolun'),
-              ),
+              const CustomSizedBox(),
+              // Diger seçenekler
+              CustomTextButton(
+                  targetText: const RegisterScreen(),
+                  title: ProjectTexts().loginTextButton)
             ],
           ),
         ),

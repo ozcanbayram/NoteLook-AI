@@ -62,3 +62,64 @@ class NavigatorButton extends StatelessWidget {
     );
   }
 }
+
+// CUSTOM TEXT FORM FIELD
+class CustomTextField extends StatelessWidget {
+  const CustomTextField({
+    super.key,
+    required this.controller,
+    required this.labeltext,
+    required this.errorMessage,
+    required this.fieldType,
+  });
+
+  final TextEditingController controller;
+  final String labeltext;
+  final String errorMessage;
+  final bool fieldType;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      obscureText: fieldType,
+      decoration: InputDecoration(
+        labelText: labeltext,
+        labelStyle: const TextStyle(color: Colors.white),
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+      ),
+      style: const TextStyle(color: Colors.white),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return errorMessage;
+        }
+        return null;
+      },
+    );
+  }
+}
+
+// CUSTOM TEXT BUTTON
+class CustomTextButton extends StatelessWidget {
+  final Widget targetText;
+  final String title;
+  const CustomTextButton({
+    super.key,
+    required this.targetText,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        // Kayıt ekranına yönlendir
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => targetText),
+        );
+      },
+      child: Text(title),
+    );
+  }
+}
