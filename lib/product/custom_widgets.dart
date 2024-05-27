@@ -81,6 +81,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: null,
       controller: controller,
       obscureText: fieldType,
       decoration: InputDecoration(

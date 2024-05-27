@@ -16,4 +16,10 @@ class ProjectTexts {
   final String successRegister = 'Kayıt başarılı';
   final String logOut = 'Çıkış yap';
   final String anyErrorMessage = 'Bir hata oluştu';
+  final String alertAddNote = 'Başlık ve içerik boş olamaz';
+  final String inputTitle = 'Başlık giriniz';
+  final String addNoteTitle = 'Yeni Not';
+  final String addNoteInputTitle = 'Başlık';
+  final String addNoteInputNote = 'Başlık';
+  final String save = 'Kaydet';
 }
