@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:note_ai/product/project_texts.dart';
 import 'package:note_ai/screens/login_screen.dart';
 import 'package:note_ai/screens/register_screen.dart';
 
@@ -14,7 +15,7 @@ class _FirstScreenState extends State<FirstScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NoteLook'),
+        title: Text(ProjectTexts().projectName),
       ),
       body: Center(
         child: Column(
