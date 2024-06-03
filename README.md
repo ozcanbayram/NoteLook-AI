@@ -3,10 +3,7 @@
 
 ![giphy](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3kxcWN0cjM0Y2E1dzM2YTQ2M2pyZ2hmM2NhYm1kNGRybjhxMG9pMCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/4rMp6ZvRLEg1GdcRnp/giphy.gif)
 
-
 <hr>
-
-Bu uygulamada Bilginin Gücü konsepti temel alınmıştır. 
 
 Yapay zekadan destek alarak Bilgiyi daha güçlü kılmak ve hepimizin gündelik yaşantımızda aldığımız bilgi dolu notları daha efektif kılmak amaçlanmıştır.
 
